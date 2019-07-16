@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt317.study.lab_manager.mapper.ProjectSpendMapper">
+
+    <insert id="insertprojectspend" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.ProjectSpend">
+        INSERT INTO projectspend(projectname,spenddate,money,attention)
+        VALUE (#{projectname},#{spenddate},#{money},#{attention})
+    </insert>
+
+    <delete id="deletebyid" parameterType="java.lang.Integer">
+        DELETE FROM projectspend WHERE id=#{value}
+    </delete>
+
+    <update id="updatebyid" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.ProjectSpend">
+        UPDATE projectspend
+        SET projectname=#{projectname},spenddate=#{spenddate},money=#{money},attention=#{attention}
+        WHERE id=#{id}
+    </update>
+
+    <select id="selectbyprojectname" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.ProjectSpend">
+        SELECT * FROM projectspend WHERE projectname=#{value}
+    </select>
+
+    <select id="selectbymoney" parameterType="java.lang.Float" resultType="com.bupt317.study.lab_manager.pojo.mybatis.ProjectSpend">
+        SELECT * FROM projectspend WHERE money=#{value}
+    </select>
+
+    <select id="selectall" resultType="com.bupt317.study.lab_manager.pojo.mybatis.ProjectSpend">
+        SELECT * FROM projectspend
+    </select>
+
+</mapper>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>出账管理</title>
+    <link rel="stylesheet" type="text/css" href="/js/layui/css/layui.css">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/js/layui/layui.js}"></script>
+    <script>
+        var payment = 0;
+        //JavaScript代码区域
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#starttime',//指定元素
+                format: 'yyyy-MM-dd'
+            });
+        });
+
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#endtime',//指定元素
+                format: 'yyyy-MM-dd'
+            });
+        });
+
+        layui.use("layer", function () {
+           var layer = layui.layer;
+
+           $.ajax({
+               type: "post",
+               url: "/get_allpayment",
+               contentType: "application/x-www-form-urlencoded;charset=utf-8",
+               data: {},
+               dataType: "json",
+               success: function (data) {
+                   payment = data;
+                   table(data)
+               }
+           })
+        });
+
+        function table(data) {
+            var content = $("#content");
+            for (var i = 0; i < data.length; i++) {
+                var tr = $('<tr></tr>');
+                tr.append('<td></td>'+'<td>'+data[i].id+'</td>'+'<td>' + data[i].paymentdate + '</td>' +
+                    '<td>' + data[i].money + '</td>' +
+                    '<td>' + data[i].attention + '</td>' +
+                    '<td>' + data[i].more + '</td>');
+                tr.appendTo(content);
+            }
+        }
+
+        function reset(){
+            table(payment);
+        }
+
+        layui.use("table", function () {
+            var table = layui.table;
+            //转换静态表格
+            table.init('demo', {
+                page: true,
+                limit: 10,
+                id: 'testReload'
+            });
+
+            table.on('radio(demo)', function(obj){
+                sessionStorage.setItem("id", obj.data.id);
+                sessionStorage.setItem("attention", obj.data.attention);
+                sessionStorage.setItem("money", obj.data.money);
+                sessionStorage.setItem("paymentdate", obj.data.paymentdate);
+                sessionStorage.setItem("more", obj.data.more)
+            });
+
+            sessionStorage.clear();
+        });
+
+        function search() {
+            ////////////////////////查询函数，传给后台查询条件////////////////////
+            var attention = $("#attention").val();
+            var money_min = $("#money_min").val();
+            var money_max = $("#money_max").val();
+            var starttime = $("#starttime").val();
+            var endtime = $("#endtime").val();
+
+            if (starttime == "" || endtime == ""){
+                starttime =0;
+                endtime = 0;
+            }
+            if(attention == ""){
+                attention = 0;
+            }
+            if (money_min == "" || money_max == ""){
+                money_min = 0;
+                money_max = 0;
+            }
+
+            
+            var data = "attention="+attention+"&money_min="+money_min+"&money_max="+money_max+"&starttime="+starttime+"&endtime="+endtime;
+
+            console.log(data);
+
+            $.ajax({
+                type: "post",
+                url: "/payment_search",//////查询接口，返回给前台满足要求的对象列表////////////////////
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    var content = $("#content");
+                    content.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        var tr = $('<tr></tr>');
+                        tr.append('<td></td>'+'<td>'+data[i].id+'</td>'+'<td>' + data[i].paymentdate + '</td>' +
+                            '<td>' + data[i].money + '</td>' +
+                            '<td>' + data[i].attention + '</td>' +
+                            '<td>' + data[i].more + '</td>');
+                        tr.appendTo(content);
+                    }
+                    var table = layui.table;
+                    //转换静态表格
+                    table.init('demo', {
+                        page: true,
+                        limit: 10,
+                        id: 'testReload'
+                    });
+                }
+            });
+        }
+
+        function edit() {
+            var layer = layui.layer;
+
+           if (sessionStorage.length == 0){
+               layer.open({
+                   title: '警告'
+                   ,content: '未选择任何数据'
+               })
+           }else {
+               window.location.href = '/fourthpage/paymentedit'
+           }
+        }
+    </script>
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo" style="font-size: 20px;">317财务管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/u/home">主页</a></li>
+            <li class="layui-nav-item"><a href="">帮助</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    欢迎：<span sec:authentication="name"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/thirdpage/owninformation">个人资料</a></dd>
+                    <dd><a href="/thirdpage/sysdescription">系统说明</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/login_out">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">项目管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/program">项目列表</a></dd>
+                        <dd><a href="/secondpage/new">新建项目</a></dd>
+                        <dd><a href="/secondpage/projectspend">新建花销</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/usermanager">用户一览</a></dd>
+                        <dd><a href="/authmanager">权限设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">报销系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/thirdpage/bill">报销一览</a></dd>
+                        <dd><a href="/thirdpage/newbill">新建报销</a></dd>
+                        <dd><a href="/thirdpage/checkbill">报销审核</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:">资金管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/fourthpage/payment">出账管理</a></dd>
+                        <dd><a href="/fourthpage/gain">入账管理</a></dd>
+                        <dd><a href="">工资管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="background-color: #f2f2f2; padding: 20px">
+        <!-- 内容主体区域 -->
+        <form class="layui-form" action="">
+        <div class="demoTable">
+            花销类别:
+            <div class="layui-inline ">
+                <select name="attention" id="attention">
+                    <option value=""></option>
+                    <option value="工资支出">工资支出</option>
+                    <option value="物品报销">物品报销</option>
+                    <option value="项目花销">项目花销</option>
+                </select>
+            </div>
+            &nbsp;
+            金额:
+            <div class="layui-inline">
+                 <input class="layui-input" name="money_min" id="money_min" autocomplete="off">
+            </div>
+            —
+            <div class="layui-inline">
+                <input class="layui-input" name="money_max" id="money_max" autocomplete="off">
+            </div>
+            &nbsp;
+            花销日期:
+            <div class="layui-inline">
+                <input class="layui-input" name="starttime" id="starttime" autocomplete="off">
+            </div>
+            —
+            <div class="layui-inline">
+                <input class="layui-input" name="endtime" id="endtime" autocomplete="off">
+            </div>
+            <br>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>支出列表</legend>
+            </fieldset>
+            <button type="button" class="layui-btn" id="reload" onclick="search()">搜索</button>
+            <button class="layui-btn layui-btn-primary" onclick="reset()">重置</button>
+            <button class="layui-btn" type="button" onclick="edit()">修改</button>
+        </div>
+        </form>
+        <!--<h3>&nbsp;</h3>-->
+        <table lay-filter="demo" hidden>
+            <thead>
+            <tr>
+                <th lay-data="{type:'radio'}"></th>
+                <th lay-data="{field:'id', width:80}">ID</th>
+                <th lay-data="{field:'paymentdate', width:200}">花销日期</th>
+                <th lay-data="{field:'money', width:100}">金额</th>
+                <th lay-data="{field:'attention', width:200}">花销类型</th>
+                <th lay-data="{field:'more'}">花销明细</th>
+            </tr>
+            </thead>
+            <tbody id="content">
+            </tbody>
+        </table>
+    </div>
+    <div class="layui-footer" style="text-align: center; background-color: #f2f2f2">
+        <!-- 底部固定区域 -->
+        © bupt.317.com
+    </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>工资一览</title>
+    <link rel="stylesheet" type="text/css" href="/js/layui/css/layui.css">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/js/layui/layui.js}"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+
+        layui.use('carousel', function(){
+            var carousel = layui.carousel;
+            //建造实例
+            carousel.render({
+                elem: '#round'
+                ,width: '100%'
+                ,arrow: 'hover'
+                ,interval:'3000'
+            });
+        });
+    </script>
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo" style="font-size: 20px;">317财务管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/u/home">主页</a></li>
+            <li class="layui-nav-item"><a href="">帮助</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    欢迎：<span><title sec:authentication="name"></title></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/index">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">项目管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/u/program">项目列表</a></dd>
+                        <dd><a href="/u/program/new">新建项目</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">权限设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">报销系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">费用报销</a></dd>
+                        <dd><a href="">报销一览</a></dd>
+                        <dd><a href="">报销审核</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:">资金管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">出入账一览</a></dd>
+                        <dd><a href="">入账管理</a></dd>
+                        <dd><a href="">工资管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="background-color: #f2f2f2; padding: 20px">
+        <!-- 内容主体区域 -->
+        <table class="layui-hide" id="test"></table>
+        <script>
+            layui.use('table', function(){
+                var table = layui.table;
+
+                table.render({
+                    elem: '#test'
+                    ,url:'/demo/table/user/'
+                    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    ,cols: [[
+                        {field:'studentid', width:80, title: '学号', sort: true}
+                        ,{field:'username', width:80, title: '姓名'} ,
+                        {field:'senddate', width:80, title: '派发时间'}
+                        ,{field:'state', width:80, title: '派发状态', sort: true}
+                        ,{field:'salary', title: '金额', width: '30%', minWidth: 100}
+                        //工资金额--salary
+                        ,{field:'attention', title: '备注', sort: true}
+                    ]]
+                });
+            });
+        </script>
+    </div>
+    <div class="layui-footer" style="text-align: center; background-color: #f2f2f2">
+        <!-- 底部固定区域 -->
+        © bupt.317.com
+    </div>
+</div>
+</div>
+</body>
+</html>

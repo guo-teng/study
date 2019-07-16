@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt317.study.lab_manager.mapper.UserInformationMapper">
+
+    <insert id="insertuserinformation" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.UserInformation">
+        INSERT INTO userinformation(username,name,studentid)
+        VALUE(#{username},#{name},#{studentid})
+    </insert>
+
+    <delete id="deletebyusername" parameterType="java.lang.String">
+        DELETE FROM userinformation WHERE username=#{username}
+    </delete>
+
+    <delete id="deletebyid" parameterType="java.lang.Integer">
+        DELETE FROM userinformation WHERE id=#{value}
+    </delete>
+
+    <update id="updatebyid" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.UserInformation">
+        UPDATE userinformation
+        SET name=#{name},idcard=#{idcard},studentid=#{studentid},birthday=#{birthday}
+        WHERE id=#{id}
+    </update>
+
+    <select id="selectbyusername" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.UserInformation">
+        SELECT * FROM userinformation WHERE username=#{username}
+    </select>
+
+    <select id="selectbyid" parameterType="java.lang.Integer" resultType="com.bupt317.study.lab_manager.pojo.mybatis.UserInformation">
+        SELECT * FROM userinformation WHERE id=#{value}
+    </select>
+
+    <select id="selectall" resultType="com.bupt317.study.lab_manager.pojo.mybatis.UserInformation">
+        SELECT * FROM userinformation
+    </select>
+
+</mapper>

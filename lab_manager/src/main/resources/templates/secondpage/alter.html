@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>修改项目</title>
+    <link rel="stylesheet" type="text/css" href="/js/layui/css/layui.css">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/js/layui/layui.js}"></script>
+    <script>
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#starttime',//指定元素
+                format: 'yyyy-MM-dd'
+            });
+        });
+
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#endtime',//指定元素
+                format: 'yyyy-MM-dd'
+            });
+        });
+
+        layui.use("layer", function () {
+            var id ='id='+ sessionStorage.getItem('id');
+
+            $.ajax({
+                type:"post",
+                url:"/program_byid", ///////////////////  根据id获取数据，用于重写数据 //////////////////
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                data:id,
+                dataType:"json",
+                success:function (obj) {
+                    var projectstate = "";
+
+                    if (obj.projectstate == "Y"){
+                        projectstate = "Y";
+                    } else {
+                        projectstate = "N";
+                    }
+
+                    layui.form.val('reload',{
+                        "projectname": obj.projectname,
+                        "member": obj.member,
+                        "starttime": obj.starttime,
+                        "endtime": obj.endtime,
+                        "projectstate": projectstate,
+                        "projectmessage": obj.projectmessage
+                    })
+                }
+            });
+        });
+
+        layui.use('form', function(){
+            var form = layui.form;
+            //监听提交
+            form.on('submit(formDemo)', function(data){
+                var form_data = "id="+sessionStorage.getItem('id')+"&projectname="+data.field.projectname+"&member="+data.field.member+"&projectmessage="+data.field.projectmessage+
+                    "&starttime="+data.field.starttime+"&endtime="+data.field.endtime+"&projectstate="+data.field.projectstate;
+                $.ajax({
+                    type: "post",
+                    url: "/program_alter",
+                    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                    data: form_data,
+                    dataType: "text",
+                    success: function (site) {
+                        if (site == "Y"){
+                            layer.msg("修改成功！");
+                            setTimeout(function () {window.location.replace("/program");}, 2000);
+                        }else {
+                            layer.msg("通信错误");
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+    </script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo" style="font-size: 20px;">317财务管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/home">主页</a></li>
+            <li class="layui-nav-item"><a href="">帮助</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    欢迎：<span sec:authentication="name"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/thirdpage/owninformation">个人资料</a></dd>
+                    <dd><a href="/thirdpage/sysdescription">系统说明</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/login_out">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">项目管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/program">项目列表</a></dd>
+                        <dd><a href="/secondpage/new">新建项目</a></dd>
+                        <dd><a href="/secondpage/projectspend">新建花销</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/usermanager">用户一览</a></dd>
+                        <dd><a href="/authmanager">权限设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">报销系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/thirdpage/bill">报销一览</a></dd>
+                        <dd><a href="/thirdpage/newbill">新建报销</a></dd>
+                        <dd><a href="/thirdpage/checkbill">报销审核</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:">资金管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">出账管理</a></dd>
+                        <dd><a href="">入账管理</a></dd>
+                        <dd><a href="">工资管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="background-color: #f2f2f2; padding: 20px">
+        <form class="layui-form" action="" lay-filter = "reload">
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-block">
+                    <input type="text" id="projectname" name="projectname" required lay-verify="required" placeholder="请输入项目名称" class="layui-input" style="width: 1130px">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">参与人员</label>
+                <div class="layui-input-block">
+                    <input type="text" id="member" name="member" required lay-verify="required" placeholder="请输入参与人员" class="layui-input" style="width: 1130px">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">起始日期</label>
+                    <div class="layui-input-inline">
+                        <input name="starttime" id="starttime" required lay-verify="required" placeholder="yyyy年MM月dd日" class="layui-input" type="text" style="width: 1130px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">截止日期</label>
+                    <div class="layui-input-inline">
+                        <input name="endtime" id="endtime" required lay-verify="required" placeholder="yyyy年MM月dd日" class="layui-input" type="text" style="width: 1130px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">项目详情</label>
+                <div class="layui-input-block">
+                    <textarea id="projectmessage" name="projectmessage" required lay-verify="required" placeholder="请输入内容" class="layui-textarea" style="width: 1130px"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="projectstate" value="N" title="未结项">
+                    <input type="radio" name="projectstate" value="Y" title="已结项">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="layui-footer" style="text-align: center; background-color: #f2f2f2">
+        <!-- 底部固定区域 -->
+        © bupt.317.com
+    </div>
+</div>
+</body>
+</html>

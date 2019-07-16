@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt317.study.lab_manager.mapper.SalaryMapper">
+
+    <insert id="insertsalary" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Salary">
+        INSERT INTO salary(frequency,username,name,studentid,state,senddate,attention)
+        VALUE(#{frequency},#{username},#{name},#{studentid},#{state},#{senddate},#{attention})
+    </insert>
+
+    <delete id="deletebyid" parameterType="java.lang.Integer">
+        DELETE FROM salary WHERE id=#{value}
+    </delete>
+
+    <update id="updatebyid" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Salary">
+        UPDATE salary
+        SET state=#{state},senddate=#{senddate},attention=#{attention}
+        WHERE id=#{id}
+    </update>
+
+    <select id="selectbystudentid" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Salary">
+        SELECT * FROM salary WHERE studentid=#{value}
+    </select>
+
+    <select id="selectbyname" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Salary">
+        SELECT * FROM salary WHERE name=#{value}
+    </select>
+
+    <select id="selectall" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Salary">
+        SELECT * FROM salary
+    </select>
+
+</mapper>

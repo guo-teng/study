@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="/css/register.css">
+</head>
+<body style="background-image:url(/picture/register.jpg)">
+    <div class="page-container">
+        <h1>用户注册</h1>
+        <span th:text="${alert}"></span>
+        <form th:action="@{/register_user}" method="post">
+            <input type="text" name="username" class="username" placeholder="用户名" required="required">
+            <input type="text" name="studentid" class="username" placeholder="学号" required="required">
+            <input type="password" name="password" class="password" placeholder="密码" required="required">
+            <input type="password" name="repassword" class="password" placeholder="再次输入密码" required="required">
+            <button type="submit" class="submit_button">注册</button>
+            <div class="error">
+                <span>+</span>
+            </div>
+        </form>
+    </div>
+</body>
+<h3></h3>
+<div style="text-align:center;">
+    <p>317财务管理系统注册</p>
+</div>
+</html>

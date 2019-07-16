@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>报销管理</title>
+    <link rel="stylesheet" type="text/css" href="/js/layui/css/layui.css">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/js/layui/layui.js}"></script>
+    <script th:inline="javascript">
+        var userauth = [[${userauth}]];
+    </script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+
+        layui.use('layer', function(){
+            var layer = layui.layer;
+        });
+
+        function levelup(element) {
+            $.ajax({
+                type: "post",
+                url: "/bill_success",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                data: {"id":element.id},
+                dataType: "text",
+                success: function (site) {
+                    if (site == "Y"){
+                        layer.msg("修改成功");
+                        setTimeout(function () {window.location.replace("/thirdpage/bill");}, 2000);
+                    }else {
+                        layer.msg("通信错误");
+                    }
+                }
+            });
+        }
+
+        function leveldown(element) {
+            $.ajax({
+                type: "post",
+                url: "/bill_refuse",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                data: {"id":element.id},
+                dataType: "text",
+                success: function (site) {
+                    if (site == "Y"){
+                        layer.msg("修改成功");
+                        setTimeout(function () {window.location.replace("/thirdpage/bill");}, 2000);
+                    }else {
+                        layer.msg("通信错误");
+                    }
+                }
+            });
+        }
+
+        function deleteuser(element)
+        {
+            layer.open({
+                title:"警告"
+                ,content: '<h3 style="color:red;text-align:center">你将要删除此项报销</h3>'
+                ,btn: ['确定', '取消']
+                ,btnAlign:"c"
+                ,yes: function(){
+                    //按钮一的回调
+                    $.ajax({
+                        type: "post",
+                        url: "/deletebill",
+                        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                        data: {"id":element.id},
+                        dataType: "text",
+                        success: function (site) {
+                            if (site == "Y")
+                            {
+                                layer.msg("删除成功");
+                                setTimeout(function () {window.location.replace("/thirdpage/bill");}, 2000);
+                            }
+                            else
+                            {
+                                layer.msg("删除失败");
+                            }
+                        }
+                    });
+                }
+                ,btn2: function(index, layero){
+                    //按钮二的回调
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+                ,cancel: function(){
+                    //右上角关闭回调
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        }
+
+        function load_project(item, num) {
+            var site = num % 2;
+            var thebody='';
+            var peoplebody='<a id="deleteuser" name="deleteuser" onclick="deleteuser(this)" class="layui-btn layui-btn-warm">删除报销</a>';
+
+            var authbody='<a id="deleteuser" name="deleteuser" onclick="deleteuser(this)" class="layui-btn layui-btn-warm">删除报销</a>'+"&nbsp;"+
+                '<a id="levelup" name="levelup" onclick="levelup(this)" class="layui-btn layui-btn-danger">通过报销</a>'+"&nbsp;"+
+                '<a id="leveldown" name="leveldown" onclick="leveldown(this)" class="layui-btn layui-btn-normal">拒绝报销</a>';
+            if (userauth=="M")
+                thebody=peoplebody;
+            else
+                thebody=authbody;
+            if (site == 0){
+                var content = $("#left-list");
+                var card = $('<div></div>');
+                card.addClass('layui-card');
+                card.appendTo(content);
+
+                var card_head = $('<div></div>');
+                card_head.addClass('layui-card-header');
+                card_head.html(thebody);
+                card_head.appendTo(card);
+                $("#levelup").attr("id", item.id);
+                $("#leveldown").attr("id", item.id);
+                $("#deleteuser").attr("id", item.id);
+
+                var card_body = $('<div></div>');
+                card_body.addClass('layui-card-body');
+                card_body.html("花销方式：" + item.billtype + '<br>' +
+                    "报销类别：" + item.billpattern + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +"报销金额："+item.money+'<br>'+
+                    "支付方式："+item.paymentways+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+"发票："+item.invoice+'<br>'+
+                    "买方："+item.buyer+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+"卖方："+item.seller+'<br>'+
+                    "报销明细："+item.billcontent+'<br>'+ "报销是否通过："+item.state+'<br>'+ "报销时间："+item.billtime);
+                card_body.appendTo(card);
+            }else {
+                var content2 = $("#right-list");
+                var card2 = $('<div></div>');
+                card2.addClass('layui-card');
+                card2.appendTo(content2);
+
+                var card_head2 = $('<div></div>');
+                card_head2.addClass('layui-card-header');
+                card_head2.html(thebody);
+                card_head2.appendTo(card2);
+                $("#levelup").attr("id", item.id);
+                $("#leveldown").attr("id", item.id);
+                $("#deleteuser").attr("id", item.id);
+
+                var card_body2 = $('<div></div>');
+                card_body2.addClass('layui-card-body');
+                card_body2.html("花销方式：" + item.billtype + '<br>' +
+                    "报销类别：" + item.billpattern + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +"报销金额："+item.money+'<br>'+
+                    "支付方式："+item.paymentways+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+"发票："+item.invoice+'<br>'+
+                    "买方："+item.buyer+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+"卖方："+item.seller+'<br>'+
+                    "报销明细："+item.billcontent+'<br>'+ "报销是否通过："+item.state+'<br>'+ "报销时间："+item.billtime);
+                card_body2.appendTo(card2);
+            }
+            $("html, body").scrollTop(0).animate({scrollTop: $("#list").offset().top});
+        }
+
+        layui.use('laypage', function(){
+            $.ajax({
+                type: "post",
+                url: "/getbill",
+                data: {},
+                dataType:'json',
+                success: function (data) {
+                    paging(data)
+                }
+            });
+
+            function paging(data) {
+                var laypage = layui.laypage;
+                laypage.render({
+                    elem: 'paging',
+                    count: data.length,
+                    layout: ['prev', 'page', 'next', 'limit', 'skip', 'count'],
+                    jump: function(obj){
+                        var curr = obj.curr;
+                        var limit = obj.limit;
+                        $("#right-list").empty();
+                        $("#left-list").empty();
+                        for (i = (curr-1)*limit; i < curr*limit; i++){
+                            if (i == data.length) break;
+                            load_project(data[i], i);
+                        }
+                    }
+                });
+            }
+        });
+
+    </script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo" style="font-size: 20px;">317财务管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/home">主页</a></li>
+            <li class="layui-nav-item"><a href="">帮助</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    欢迎：<span sec:authentication="name"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">系统说明</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/login_out">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">项目管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/program">项目列表</a></dd>
+                        <dd><a href="/secondpage/new">新建项目</a></dd>
+                        <dd><a href="/secondpage/projectspend">新建花销</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/usermanager">用户一览</a></dd>
+                        <dd><a href="/authmanager">权限设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">报销系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/thirdpage/bill">报销一览</a></dd>
+                        <dd><a href="/thirdpage/newbill">新建报销</a></dd>
+                        <dd><a href="/thirdpage/checkbill">报销审核</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:">资金管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">出账管理</a></dd>
+                        <dd><a href="">入账管理</a></dd>
+                        <dd><a href="">工资管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="background-color: #f2f2f2">
+        <!-- 内容主体区域 -->
+        <div class="layui-row" id="list">
+            <div class="layui-col-xs6">
+                <div class="grid-demo grid-demo-bg1">
+                    <div style="padding: 20px; background-color: #F2F2F2;">
+                        <div class="layui-row layui-col-space15" id="left-list">
+                            <!--左列项目卡-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="grid-demo">
+                    <div style="padding: 20px; background-color: #F2F2F2;">
+                        <div class="layui-row layui-col-space15" id="right-list">
+                            <!--右列项目卡-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12" style="padding: 13px">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="paging"></div>
+                </div>
+            </div>
+        </div>
+        <a href="#list" id="top"></a>
+    </div>
+
+    <div class="layui-footer" style="text-align: center; background-color: #f2f2f2">
+        <!-- 底部固定区域 -->
+        © bupt.317.com
+    </div>
+</div>
+</body>
+</html>

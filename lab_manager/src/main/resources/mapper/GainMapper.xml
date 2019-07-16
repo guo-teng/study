@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt317.study.lab_manager.mapper.GainMapper">
+
+    <insert id="insertgain" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Gain">
+        INSERT INTO gain(gaindate,money,attention,more)
+        VALUE (#{gaindate},#{money},#{attention},#{more})
+    </insert>
+
+    <delete id="deletebyid" parameterType="java.lang.Integer">
+        DELETE FROM gain WHERE id=#{id}
+    </delete>
+
+    <update id="updatebyid" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Gain">
+        UPDATE gain
+        SET gaindate=#{gaindate},money=#{money},attention=#{attention},more=#{more}
+        WHERE id=#{id}
+    </update>
+
+    <select id="selectbyid" parameterType="java.lang.Integer" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Gain">
+        SELECT * FROM gain WHERE id=#{value}
+    </select>
+
+    <select id="selectbydate" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Gain">
+        SELECT * FROM gain WHERE gaindate=#{value}
+    </select>
+
+    <select id="selectbymoney" parameterType="java.lang.Float" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Gain">
+        SELECT * FROM gain WHERE money=#{value}
+    </select>
+
+    <select id="selectall" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Gain">
+        SELECT * FROM gain
+    </select>
+
+</mapper>

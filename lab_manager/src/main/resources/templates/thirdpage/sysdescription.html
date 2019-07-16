@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>系统使用说明</title>
+    <link rel="stylesheet" type="text/css" href="/js/layui/css/layui.css">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/js/layui/layui.js}"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+
+        layui.use('carousel', function(){
+            var carousel = layui.carousel;
+            //建造实例
+            carousel.render({
+                elem: '#round'
+                ,width: '100%'
+                ,arrow: 'hover'
+                ,interval:'3000'
+            });
+        });
+    </script>
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo" style="font-size: 20px;">317财务管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/home">主页</a></li>
+            <li class="layui-nav-item"><a href="">帮助</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    欢迎：<span sec:authentication="name"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/thirdpage/owninformation">个人资料</a></dd>
+                    <dd><a href="/thirdpage/sysdescription">系统说明</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/login_out">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">项目管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/program">项目列表</a></dd>
+                        <dd><a href="/secondpage/new">新建项目</a></dd>
+                        <dd><a href="/secondpage/projectspend">新建花销</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/usermanager">用户一览</a></dd>
+                        <dd><a href="/authmanager">权限设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">报销系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/thirdpage/bill">报销一览</a></dd>
+                        <dd><a href="/thirdpage/newbill">新建报销</a></dd>
+                        <dd><a href="/thirdpage/checkbill">报销审核</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:">资金管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">出账管理</a></dd>
+                        <dd><a href="">入账管理</a></dd>
+                        <dd><a href="">工资管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="background-color: #f2f2f2; padding: 20px">
+        <blockquote class="layui-elem-quote">
+            <h2>317财务系统使用说明</h2>
+        </blockquote>
+
+            <div align="right" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="layui-btn layui-btn-normal" href="/thirdpage/altersysnotice">修改系统说明</a>
+            </div>
+            <p>&nbsp;</p>
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title" style="color: #FF5722">项目模块说明</h2>
+                <div class="layui-colla-content">
+                    <p><span th:text="${projectnotice}"></span></p>
+                </div>
+            </div>
+
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title" style="color: #FF5722">报销模块说明</h2>
+                <div class="layui-colla-content">
+                    <p><span th:text="${billnotice}"></span></p>
+                </div>
+            </div>
+
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title" style="color: #FF5722">出入帐模块说明</h2>
+                <div class="layui-colla-content">
+                    <p><span th:text="${salarynotice}"></span></p>
+                </div>
+            </div>
+
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title" style="color: #FF5722">用户模块说明</h2>
+                <div class="layui-colla-content">
+                    <p><span th:text="${usernotice}"></span></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-footer" style="text-align: center; background-color: #f2f2f2">
+        <!-- 底部固定区域 -->
+        © bupt.317.com
+    </div>
+</div>
+</div>
+</body>
+</html>

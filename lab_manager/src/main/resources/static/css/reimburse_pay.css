@@ -1,0 +1,104 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{font:	14px /24px "Microsoft YaHei";
+    /*  字体大小/行高 "字形"  */
+}
+.background img{
+    position: fixed;
+    width: 1536px;
+    height: 1023px;
+    z-index: -1;
+}
+ul,li{
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+header{
+    width: 100%;
+    height: 50px;
+    font-size: 30px;
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+.container{
+    margin: 0px;
+    width:100%;
+}
+.topbar-nav{
+    float:left;
+}
+.topbar-info{
+    float:right;
+    margin-right: 400px;
+}
+.topbar a{
+    color: #b0b0b0;
+    font-size:12px;
+}
+.topbar a:hover{
+    color: #000000;
+    background-color: #ff6700;
+
+}
+.container img{
+    width: 50px;
+    height:50px;
+    float:left;
+}
+footer{
+    width: 100%;
+    height: 60px;
+    text-align: center;
+    font-size: 15px;
+    line-height: 40px;
+    border-top: 1px solid #ccc;
+    box-sizing: border-box;
+    padding: 10px;
+}
+.content{
+    width: 100%;
+    height: 500px;
+    box-sizing: border-box;
+    padding: 0px 20px 20px 20px;
+}
+.content .content-left{
+    float: left;
+    width: 15%;
+    box-sizing: border-box;
+    height: 500px;
+    /* background: red; */
+    border-right: 1px solid #ccc;
+}
+.content .content-left ul {
+    width: 100%;
+}
+.content .content-left ul li{
+    text-align: center;
+    padding: 20px;
+}
+.content .content-right{
+    float: left;
+    /* background: green; */
+    width: 84%;
+    height: 500px;
+    /* background: red; */
+}
+.content .content-right .feiyongbaoxiao{
+    width: 100%;
+}
+.content .content-right .feiyongbaoxiao div{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+form{
+    display: inline-block;
+    width: 85%;
+}
+

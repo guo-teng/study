@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>出入账一览</title>
+    <link rel="stylesheet" type="text/css" href="/js/layui/css/layui.css">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/js/echarts.min.js}"></script>
+    <script th:src="@{/js/layui/layui.js}"></script>
+    <script th:src="@{/js/jquery.table2excel.js}"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+
+        layui.use("layer", function () {
+            var data = "id="+window.sessionStorage.getItem("id");
+            money = [];
+            date = [];
+            var inputmoney = null;
+
+            $.ajax({
+                type: "post",
+                url: "/finance_financegraph",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (i, val) {
+                        money[i] = val.money;
+                        date[i] = val.spenddate;
+                        table(i, money[i], date[i]);
+                        inputmoney = val.inputmoney;
+                        sessionStorage.setItem("inputmoney", inputmoney);
+                    });
+                    chart(money, date, inputmoney)
+                }
+            });
+
+            function table(num, money, date) {
+                var cotent = $("#tbody");
+                var tr = $('<tr></tr>');
+                var tdate = $('<th></th>');
+                var ttime = $('<th></th>');
+                tdate.html(date);
+                tdate.appendTo(tr);
+                ttime.html(money);
+                ttime.appendTo(tr);
+                tr.appendTo(cotent);
+            }
+
+            function chart(money, date, inputmoney) {
+                var echar = echarts.init(document.getElementById("financegraph"));
+                var option = {
+                    title:{
+                        text:inputmoney,
+                        x:'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter:function (params) {
+                            var res = '<div><p>时间：'+params[0].name+'</p></div>';
+                            res+='<p>'+params[0].seriesName+': '+params[0].data+'元'+'</p>';
+                            return res;
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: date
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        name:'入账',
+                        data: inputmoney,
+                        type: 'line',
+                        symbolSize: 8,
+                        symbolWidth: 2,
+
+                        itemStyle : {
+                            normal : {
+                                color:'#009688',
+                                lineStyle:{
+                                    color:'#009688',
+                                    width:2
+                                }
+                            }
+                        }
+                    }]
+                };
+                echar.setOption(option);
+                window.onresize = echar.resize;
+            }
+        });
+
+        function clean() {
+            sessionStorage.clear();
+        }
+
+        function download() {
+            var inputmoney = sessionStorage.getItem("inputmoney");
+            $("#tableExcel").table2excel({
+                exclude: ".noExl",
+                filename:inputmoney,
+                name:"Excel Document Name",
+                exclude_img:true,
+                exclude_links:true,
+                exclude_inputs:true
+            });
+        }
+    </script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo" style="font-size: 20px;">317财务管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/u/home">主页</a></li>
+            <li class="layui-nav-item"><a href="">帮助</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    欢迎：<span><title sec:authentication="name"></title></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/index">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">项目管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/program">项目列表</a></dd>
+                        <dd><a href="/secondpage/new">新建项目</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">权限设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">报销系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">费用报销</a></dd>
+                        <dd><a href="">报销一览</a></dd>
+                        <dd><a href="">报销审核</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:">资金管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">出入账一览</a></dd>
+                        <dd><a href="">入账管理</a></dd>
+                        <dd><a href="">工资管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="background-color: #f2f2f2; padding: 20px">
+        <!-- 内容主体区域 -->
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">入账一览</li>
+                <li class="layui-this"> <a href="graphcost.html">出账一览</a></li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show" style="width: 100%; height:500px">
+                    <div id="graph" style="width: 85%; height:85%; position: absolute; "></div>
+                </div>
+                <div class="layui-tab-item" >
+                    <table class="layui-table" id="tableExcel">
+                        <colgroup>
+                            <col width="150">
+                            <col width="200">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>收入</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+                    <button class="layui-btn" onclick="download()">导出Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer" style="text-align: center; background-color: #f2f2f2">
+        <!-- 底部固定区域 -->
+        © bupt.317.com
+    </div>
+</div>
+</body>
+</html>

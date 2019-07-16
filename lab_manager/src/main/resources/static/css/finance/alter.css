@@ -1,0 +1,198 @@
+body{
+    margin: 0;
+}
+.background img{
+    position: fixed;
+    width: 1536px;
+    height: 1023px;
+}
+.guide{
+    position: absolute;
+    height: 60px;
+    width: 1536px;
+    top: 0;
+    left: 0;
+    text-align: center;
+    line-height: 60px;
+    font-size: 28px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+.home_logo{
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 0px;
+    left: 10px;
+}
+.home_logo img{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 10px;
+    left: 18px;
+}
+.home_logo span{
+    position: absolute;
+    font-size: 12px;
+    width: 24px;
+    height: 10px;
+    top: 14px;
+    left: 18px;
+}
+.logout_logo{
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 0px;
+    left: 60px;
+}
+.logout_logo img{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 10px;
+    left: 18px;
+}
+.logout_logo span{
+    position: absolute;
+    font-size: 12px;
+    width: 24px;
+    height: 10px;
+    top: 14px;
+    left: 18px;
+}
+.guide a:link, a:visited{
+    display: block;
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+}
+.programList{
+    background-color: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    width: 1000px;
+    height: 600px;
+    top: 120px;
+    left: 268px;
+}
+.programList_title{
+    position: absolute;
+    width: 1000px;
+    height: 30px;
+    background-color: white;
+    text-align: center;
+    line-height: 30px;
+}
+.new{
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    top: 35px;
+    left: 200px;
+    display: block;
+    color: black;
+}
+.new img{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 3px;
+    left: 0px;
+    line-height: 30px;
+}
+.new span{
+    position: absolute;
+    top: 0;
+    left: 25px;
+    line-height: 30px;
+}
+
+.programList_content{
+    position: absolute;
+    margin: 0;
+    padding-top: 10px;
+    width: 600px;
+    height: 200px;
+    background-color: white;
+    left: 200px;
+    overflow: auto;
+}
+.alter{
+    position: absolute;
+    left: 450px;
+}
+.graph{
+    position: absolute;
+    left: 510px;
+}
+.box{
+    width:150px;
+    height:40px;
+    background:gray;
+    padding:5px;
+    border:5px solid black;
+    margin:3px;
+    float:left;
+}
+
+.box1{
+    width:60%;
+    height:20px;
+    margin:0px auto;
+    float:right;
+}
+
+.container{
+    width:90%;
+    height:85%;
+    background:white;
+    padding:5px;
+    border:5px;
+    margin:0 auto;
+    border-radius:8px;
+}
+
+
+a{
+    text-decoration:none;
+    color:#000;
+}
+
+.box2{
+    width:90%;
+    height:90%;
+    background:gray;
+    margin:50px auto;
+}
+
+.box3{
+    width:50%;
+    height:85%;
+    padding:20px;
+    border:20px ;
+    margin:auto auto;
+    background:lightgray;
+}
+.box4{
+    width:70%;
+    height:90%;
+    margin:0px auto;
+    background:lightgray;
+}
+.box5{
+    width:80%;
+    height:90%;
+    margin:0px auto;
+    background:lightgray;
+}
+
+.box6{
+    width:50%;
+    height:90%;
+    margin:0px auto;
+    background:lightgray;
+}
+
+*{
+    font-size: 10px;
+}

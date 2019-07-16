@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt317.study.lab_manager.mapper.BillMapper">
+
+    <insert id="insertbill" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Bill">
+        INSERT INTO bill(name,studentid,billtype,billpattern,money,billtime,paymentways,billcontent,invoice,buyer,seller,state)
+        VALUE(#{name},#{studentid},#{billtype},#{billpattern},#{money},#{billtime},#{paymentways},#{billcontent},#{invoice},#{buyer},#{seller},#{state})
+    </insert>
+
+    <delete id="deletebyid" parameterType="java.lang.Integer">
+        DELETE FROM bill WHERE id=#{value}
+    </delete>
+
+    <update id="updatebyid" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Bill">
+        UPDATE bill
+        SET name=#{name},studentid=#{studentid},billtype=#{billtype},money=#{money},billtime=#{billtime},
+            paymentways=#{paymentways},billcontent=#{billcontent},invoice=#{invoice},buyer=#{buyer},seller=#{seller},state=#{state}
+        WHERE id=#{id}
+    </update>
+
+    <update id="updatestatebyid" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Bill">
+        UPDATE bill SET state=#{state} WHERE id=#{id}
+    </update>
+
+    <select id="selectbyname" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Bill">
+        SELECT * FROM bill WHERE name=#{value}
+    </select>
+
+    <select id="selectbystate" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Bill">
+        SELECT * FROM bill WHERE state=#{value}
+    </select>
+
+    <select id="selectbystudentid" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Bill">
+        SELECT * FROM bill WHERE studentid=#{value}
+    </select>
+
+    <select id="selectall" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Bill">
+        SELECT * FROM bill
+    </select>
+
+</mapper>

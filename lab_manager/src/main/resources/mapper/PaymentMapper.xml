@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt317.study.lab_manager.mapper.PaymentMapper">
+
+    <insert id="insertpayment" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Payment">
+        INSERT INTO payment(paymentdate,money,attention,more)
+        VALUE (#{paymentdate},#{money},#{attention},#{more})
+    </insert>
+
+    <delete id="deletebyid" parameterType="java.lang.Integer">
+        DELETE FROM payment WHERE id=#{value}
+    </delete>
+
+    <update id="updatebyid" parameterType="com.bupt317.study.lab_manager.pojo.mybatis.Payment">
+        UPDATE payment
+        SET paymentdate=#{paymentdate},money=#{money},attention=#{attention},more=#{more}
+        WHERE id=#{id}
+    </update>
+
+    <select id="selectbydate" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Payment">
+        SELECT * FROM payment WHERE paymentdate=#{value}
+    </select>
+
+    <select id="selectall" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Payment">
+        SELECT * FROM payment
+    </select>
+
+    <select id="selectbyattention" parameterType="java.lang.String" resultType="com.bupt317.study.lab_manager.pojo.mybatis.Payment">
+        SELECT * FROM payment WHERE attention=#{value}
+    </select>
+
+</mapper>
